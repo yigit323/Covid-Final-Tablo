@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <!-- İlk Tablonun Düzenlenmesi  -->
+    <style>
+      table{
+          
+        padding: 10px;
+        border-collapse: collapse ;
+        border-style: solid;
+        border-radius: 0px;
+      }
+      th,td{
+        
+        padding: 5px;
+        border-bottom: 1px solid white ;
+      }
+      tr:hover{
+        
+        padding: 10px;
+        background-color: white;
+      }
+
+      tbody {
+        width:max-content;
+        background-color: cyan;
+      }
+  
+  </style>
+
+<head>
+  <!-- Sitenin Genel Bilgileri  -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covid 19</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    
+</head>
+<body>
+     <!-- Sayfa Başlıkları Bölümü  -->     
+    <div className="App">
+      <body style="font-family:Verdana;color:red;"></body>
+        <h1 align="center">Covid-19 Türkiye</h1> 
+      </div>
+      <div class="container-fluid p-5 bg-light text-center my-3">
+        <div style="background-color:cyan;"></div>
+        <h5>Türkiye Temmuz Ve Haziran Ayları bilgileri</h5>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSETga699bsvDpIJ6tRx14Z0qp0WqBTi5VnIg&usqp=CAU";
+        float:right;margin-top:7px;>  
+    </div>
+    <div class="container">
+    <table class="table table-stripped">
+        <thead>
+            <tr> 
+                
+                <th>Onaylanmış Vaka Sayısı</th>
+                <th>Hayatını Kaybedenlerin Sayısı</th>
+                <th>Kurtarılanların Sayısı</th>
+                <th>Aktiv Covid-19 Hasta Sayısı</th>
+                <th>Tarih</th>
+
+            </tr>
+        </thead>
+
+<tbody id="data1">
+</tbody>
+<tbody id="data">
+</tbody>      
+</table>
+</div>
+<!-- APİ De Ki Tüm Bilgileri Göstermesi İçin Yapılan Bölüm  -->
+<script>
+    fetch("https://api.covid19api.com/country/turkey?from=2021-05-01T00:00:00Z&amp;to=2021-06-01T00:00:00Z").then(
+        res=>{
+        res.json().then(
+            data1=>{
+                console.log(data1);
+                if(data1.length   > 0){
+                    var pemt = "";
+
+                    data1.forEach((u)=>{
+                        pemt +="<tr>";
+                        pemt += "<td>"+u.Confirmed+"</td>"
+                        pemt += "<td>"+u.Deaths+"</td>"
+                        pemt += "<td>"+u.Recovered+"</td>"
+                        pemt += "<td>"+u.Active+"</td>"
+                        pemt += "<td>"+u.Date+"</td>"             
+               }
+        
+                        )
+                        document.getElementById("data1").innerHTML = pemt;
+                    }
+                }
+            )
+            
+        }
+    )
+//myChart Diye Bir Id Tanımladım.
+</script>
+<div class="container">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <script>
+    let myChart = document.getElementById('myChart').getContext('2d');
+
+    // Default Değişkenleri Tanımladım
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#000';
+
+    //Tablonun Şeklini,Satır İsimlerini Ve Vaka Sayılarını Ayarlamak İçin Yapıldı.
+    let massPopChart = new Chart(myChart, {
+      type:'polarArea', 
+      //Siz Ödevde Sadece Ayın 30. Gününü Almamı İstediniz Ben Tabloya Daha Çok Veri Ekledim Bilginize
+      data:{
+        labels:['1.Ayın 30', '2.Ayın 28', '3.Ayın 30', '4.Ayın 30', '5.Ayın 30'],
+        datasets:[{  
+            label: 'Aktiv Vaka Sayıları',    
+          data:[
+            89627,
+            100785,
+            251462,
+            456563,
+            90464,
+            
+          ],
+          //Burda Arka Plan Renkleri İçin Renk Paletlerini Ayarladım.
+          backgroundColor:[
+            'rgba(255, 99, 132, 0.6)',
+            'rgba(54, 162, 235, 0.6)',
+            'rgba(255, 206, 86, 0.6)',
+            'rgba(75, 192, 192, 0.6)',
+            'rgba(153, 102, 255, 0.6)',
+            'rgba(255, 159, 64, 0.6)',
+            'rgba(255, 99, 132, 0.6)'
+          ],
+          borderWidth:1,
+          borderColor:'#111',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#000'
+        }]
+      },
+      //Tablo'nun Başlık Kısmını Düzenleme Yeri.
+      options:{
+        title:{
+          display:true,
+          position:'top',
+          text:'2021 Ocaktan Hazirana Kadar Her Ayın Son Günü Vaka Sayıları',
+          fontSize:25
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#123'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+</script>
+</body>
+</html>
